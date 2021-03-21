@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_training/Ui/core/models/user.dart';
 import 'package:flutter_training/Ui/screens/messaging/messaging_screen.dart';
-import 'package:flutter_training/Ui/widgets/taining_button_filled.dart';
+import 'package:flutter_training/Ui/widgets/training_button_filled.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);

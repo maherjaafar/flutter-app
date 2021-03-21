@@ -5,6 +5,8 @@ import 'package:flutter_training/Ui/widgets/action_button.dart';
 import 'appbar/messaging_appbar.dart';
 import 'widgets/message_widget.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class MessagingScreen extends StatelessWidget {
   const MessagingScreen({Key key, this.localUser, this.remoteUser}) : super(key: key);
 
@@ -17,68 +19,75 @@ class MessagingScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: messagingAppBar(context, remoteUser),
-      body: Container(
-          height: screenSize.height,
-          width: screenSize.width,
-          decoration: BoxDecoration(
-              image: DecorationImage(image: NetworkImage("https://static.toiimg.com/photo/75427203/iceberg.jpg"), fit: BoxFit.fill)),
-          child: Stack(
-            fit: StackFit.loose,
-            children: [
-              Container(
-                alignment: Alignment.topCenter,
-                height: screenSize.height - 140,
-                child: SingleChildScrollView(
-                  reverse: true,
-                  child: Column(
-                    children: [
-                      MessageWidget(messageText: "Saleeem", senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(messageText: "Saleeem", senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(messageText: "Saleeem", senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                      MessageWidget(senderType: SenderType.remote),
-                      MessageWidget(senderType: SenderType.local),
-                    ],
+      body: WillPopScope(
+        onWillPop: () async {
+          return true;
+        },
+        child: Container(
+            height: screenSize.height,
+            width: screenSize.width,
+            decoration: BoxDecoration(
+                image: DecorationImage(image: NetworkImage("https://static.toiimg.com/photo/75427203/iceberg.jpg"), fit: BoxFit.fill)),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    reverse: true,
+                    child: Column(
+                      children: [
+                        MessageWidget(messageText: "Saleeem", senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(messageText: "Saleeem", senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(messageText: "Saleeem", senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                        MessageWidget(senderType: SenderType.remote),
+                        MessageWidget(senderType: SenderType.local),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              _bottomMessagingSheet(screenSize),
-            ],
-          )),
+                _bottomMessagingSheet(screenSize),
+              ],
+            )),
+      ),
     );
   }
 
   Column _bottomMessagingSheet(Size screenSize) {
+    Map<String, dynamic> newBook = new Map<String, dynamic>();
+    newBook["title"] = "title value";
+    newBook["author"] = "author value";
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -90,7 +99,11 @@ class MessagingScreen extends StatelessWidget {
           child: Row(
             children: [
               ActionButton(icon: Icons.add, press: () {}),
-              _whatsappTextFromField(),
+              _whatsappTextFromField(press: () {
+                FirebaseFirestore.instance.collection("books").add(newBook).whenComplete(() {
+                  // You can add your desire action after the row is added
+                });
+              }),
               ActionButton(icon: Icons.camera_alt_outlined, press: () {}),
               ActionButton(icon: Icons.mic_outlined, press: () {}),
             ],
@@ -100,7 +113,7 @@ class MessagingScreen extends StatelessWidget {
     );
   }
 
-  Expanded _whatsappTextFromField() {
+  Expanded _whatsappTextFromField({press}) {
     return Expanded(
         flex: 3,
         child: ClipRRect(
@@ -119,6 +132,7 @@ class MessagingScreen extends StatelessWidget {
                 ),
                 ActionButton(
                   icon: Icons.file_copy_outlined,
+                  press: press,
                 )
               ],
             ),
